@@ -4,12 +4,25 @@ import { BrowserRouter } from 'react-router-dom'
 import View from 'view'
 
 import reportWebVitals from 'reportWebVitals'
-
+import { ConnectionProvider } from '@solana/wallet-adapter-react'
+import configs from 'configs'
 import 'static/styles/index.less'
+import { WalletProvider } from '@solana/wallet-adapter-react'
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
+import { Coin98WalletAdapter } from '@solana/wallet-adapter-coin98'
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
+
+const { rpc: { endpoint } } = configs
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <BrowserRouter>
-    <View />
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider wallets={[new PhantomWalletAdapter(), new Coin98WalletAdapter()]} autoConnect>
+        <WalletModalProvider>
+          <View />
+        </WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
   </BrowserRouter>,
 )
 
